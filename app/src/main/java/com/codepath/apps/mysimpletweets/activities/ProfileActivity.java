@@ -27,8 +27,9 @@ public class ProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        String screenName = getIntent().getStringExtra("screen_name");
         client = TwitterApplication.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler(){
+        client.getUserInfo(screenName, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 user = User.fromJSON(response);
@@ -37,7 +38,6 @@ public class ProfileActivity extends ActionBarActivity {
             }
         });
 
-        String screenName = getIntent().getStringExtra("screen_name");
         if (savedInstanceState == null) {
             UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(screenName);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -58,7 +58,6 @@ public class ProfileActivity extends ActionBarActivity {
         tvFollowing.setText(user.getFriendsCount() + "Following");
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,6 +1,7 @@
 package com.codepath.apps.mysimpletweets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.codepath.apps.mysimpletweets.activities.ProfileActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -18,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by edmundye on 2/11/15.
@@ -37,13 +41,22 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         Tweet tweet = getItem(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.ivProfileImage.setTag(tweet.getUser().getScreenName());
+            viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getContext(), ProfileActivity.class);
+                    i.putExtra("screen_name", getItem(position).getUser().getScreenName());
+                    getContext().startActivity(i);
+                }
+            });
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);

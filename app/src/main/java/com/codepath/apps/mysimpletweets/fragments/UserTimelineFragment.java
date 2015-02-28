@@ -22,39 +22,16 @@ import java.util.ArrayList;
  * Created by edmundye on 2/26/15.
  */
 public class UserTimelineFragment extends TweetsListFragment {
-    private TwitterClient client;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        client = TwitterApplication.getRestClient();
-        loadMoreTweets(0);
-
+    public static UserTimelineFragment newInstance(String screenName) {
+        UserTimelineFragment userFragment = new UserTimelineFragment();
+        Bundle args = new Bundle();
+        args.putString("screen_name", screenName);
+        userFragment.setArguments(args);
+        return userFragment;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int page, int totalItemCount) {
-                if (currentMinId > 0) {
-                    loadMoreTweets(currentMinId);
-                }
-            }
-        });
-        return v;
-    }
-
-        public static UserTimelineFragment newInstance(String screenName) {
-            UserTimelineFragment userFragment = new UserTimelineFragment();
-            Bundle args = new Bundle();
-            args.putString("screenName", screenName);
-            userFragment.setArguments(args);
-            return userFragment;
-        }
-
-    private void loadMoreTweets(long minId) {
+    protected void loadMoreTweets(long minId) {
         String screenName = getArguments().getString("screen_name");
         client.getUserTimeline(screenName, new JsonHttpResponseHandler() {
             @Override
@@ -66,11 +43,5 @@ public class UserTimelineFragment extends TweetsListFragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
             }
         });
-    }
-
-    private void addTweetsAndSetMinID (JSONArray json) {
-        ArrayList<Tweet> allTweets = Tweet.fromJSONArray(json);
-        addAll(allTweets);
-        currentMinId = Tweet.getMinId(allTweets);
     }
 }

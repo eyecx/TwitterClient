@@ -1,6 +1,5 @@
 package com.codepath.apps.mysimpletweets.activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,29 +36,33 @@ import java.util.ArrayList;
 public class TimelineActivity extends ActionBarActivity {
 
     private final int REQUEST_CODE = 42;
+    private TwitterClient client;
+    private TweetsPagerAdapter paTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#55ACEE")));
         ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
-        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        paTweets = new TweetsPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(paTweets);
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
+        client = TwitterApplication.getRestClient();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-//            String tweet = data.getExtras().getString("tweet");
-//            client.tweet(tweet, new JsonHttpResponseHandler(){
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-//                    aTweets.insert(Tweet.fromJSON(json), 0);
-//                }
-//            });
+            String tweet = data.getExtras().getString("tweet");
+            client.tweet(tweet, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                    paTweets.insertTweet(Tweet.fromJSON(json), 0);
+                }
+            });
         }
     }
 
@@ -92,19 +96,23 @@ public class TimelineActivity extends ActionBarActivity {
 
     public class TweetsPagerAdapter extends FragmentPagerAdapter {
         private String tabTitles[] = { "Home", "Mentions" };
+        private HomeTimelineFragment fragmentHomeTimeline;
+        private MentionsTimelineFragment fragmentMentionsTimeline;
 
         // Adapter gets the manager insert or remove fragment from activity
         public TweetsPagerAdapter(FragmentManager fm){
             super(fm);
+            fragmentHomeTimeline = new HomeTimelineFragment();
+            fragmentMentionsTimeline = new MentionsTimelineFragment();
         }
 
         // The order and creation of fragments within the pager
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new HomeTimelineFragment();
+                return fragmentHomeTimeline;
             } else if (position == 1) {
-                return new MentionsTimelineFragment();
+                return fragmentMentionsTimeline;
             } else {
                 return null;
             }
@@ -114,6 +122,10 @@ public class TimelineActivity extends ActionBarActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return tabTitles[position];
+        }
+
+        public void insertTweet (Tweet t, int position) {
+            fragmentHomeTimeline.insertTweet(t,position);
         }
 
         // how many fragments
