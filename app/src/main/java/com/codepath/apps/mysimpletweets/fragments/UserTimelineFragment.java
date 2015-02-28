@@ -1,15 +1,6 @@
 package com.codepath.apps.mysimpletweets.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.codepath.apps.mysimpletweets.EndlessScrollListener;
-import com.codepath.apps.mysimpletweets.TwitterApplication;
-import com.codepath.apps.mysimpletweets.TwitterClient;
-import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;

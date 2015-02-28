@@ -25,6 +25,8 @@ import com.codepath.apps.mysimpletweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.mysimpletweets.fragments.MentionsTimelineFragment;
 import com.codepath.apps.mysimpletweets.fragments.TweetsListFragment;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.models.User;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -38,6 +40,7 @@ public class TimelineActivity extends ActionBarActivity {
     private final int REQUEST_CODE = 42;
     private TwitterClient client;
     private TweetsPagerAdapter paTweets;
+    private String screenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,13 @@ public class TimelineActivity extends ActionBarActivity {
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
         client = TwitterApplication.getRestClient();
+        client.getUserInfo(null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                User u = User.fromJSON(response);
+                screenName = u.getScreenName();
+            }
+        });
     }
 
     @Override
@@ -74,6 +84,7 @@ public class TimelineActivity extends ActionBarActivity {
 
     public void onProfileView (MenuItem mi) {
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("screen_name", screenName);
         startActivity(i);
     }
 

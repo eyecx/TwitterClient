@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.TwitterClient;
+import com.codepath.apps.mysimpletweets.fragments.UserProfileHeaderFragment;
 import com.codepath.apps.mysimpletweets.fragments.UserTimelineFragment;
 import com.codepath.apps.mysimpletweets.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -26,37 +27,20 @@ public class ProfileActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
         String screenName = getIntent().getStringExtra("screen_name");
-        client = TwitterApplication.getRestClient();
-        client.getUserInfo(screenName, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-            }
-        });
-
+        setContentView(R.layout.activity_profile);
+        getSupportActionBar().setTitle("@" + screenName);
         if (savedInstanceState == null) {
             UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(screenName);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.flContainer, fragmentUserTimeline);
+            ft.replace(R.id.flProfileTimeline, fragmentUserTimeline);
             ft.commit();
-        }
-    }
 
-    private void populateProfileHeader(User user) {
-        TextView tvName = (TextView) findViewById(R.id.tvFullName);
-        TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
-        TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
-        TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
-        ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
-        tvName.setText(user.getName());
-        tvTagline.setText(user.getTagline());
-        tvFollowers.setText(user.getFollowersCount() + "Followers");
-        tvFollowing.setText(user.getFriendsCount() + "Following");
-        Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
+            UserProfileHeaderFragment fragmentUserProfileHeader = UserProfileHeaderFragment.newInstance(screenName);
+            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+            ft2.replace(R.id.flProfileHeader, fragmentUserProfileHeader);
+            ft2.commit();
+        }
     }
 
     @Override

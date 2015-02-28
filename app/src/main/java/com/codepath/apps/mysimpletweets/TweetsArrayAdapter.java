@@ -48,15 +48,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
-            viewHolder.ivProfileImage.setTag(tweet.getUser().getScreenName());
-            viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getContext(), ProfileActivity.class);
-                    i.putExtra("screen_name", getItem(position).getUser().getScreenName());
-                    getContext().startActivity(i);
-                }
-            });
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
@@ -68,6 +59,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvUserName.setText(tweet.getUser().getName());
         viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
         viewHolder.tvBody.setText(tweet.getBody());
+        viewHolder.ivProfileImage.setTag(tweet.getUser().getScreenName());
+        viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ProfileActivity.class);
+                i.putExtra("screen_name", (String) v.getTag());
+                getContext().startActivity(i);
+            }
+        });
         try {
             final String TWITTER="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
             SimpleDateFormat sf = new SimpleDateFormat(TWITTER);

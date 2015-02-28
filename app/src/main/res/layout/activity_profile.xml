@@ -6,71 +6,18 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.codepath.apps.mysimpletweets.activities.ProfileActivity">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/rlUserHeader">
-
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:id="@+id/ivProfileImage"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:id="@+id/tvFullName"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/ivProfileImage"
-            android:layout_toEndOf="@+id/ivProfileImage" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tagline"
-            android:id="@+id/tvTagline"
-            android:layout_below="@+id/tvFullName"
-            android:layout_toRightOf="@+id/ivProfileImage"
-            android:layout_toEndOf="@+id/ivProfileImage" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivProfileImage"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/llCounts"
-            android:layout_alignParentBottom="false">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5 Followers"
-                android:id="@+id/tvFollowers"
-                android:paddingRight="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5 Following"
-                android:id="@+id/tvFollowing" />
-        </LinearLayout>
-    </RelativeLayout>
+        android:id="@+id/flProfileHeader"></FrameLayout>
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/rlUserHeader"
+        android:layout_below="@+id/flProfileHeader"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/flContainer"></FrameLayout>
+        android:id="@+id/flProfileTimeline"></FrameLayout>
 </RelativeLayout>
